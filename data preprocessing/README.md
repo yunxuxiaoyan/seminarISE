@@ -3,7 +3,8 @@ This file presents detail data preprocessing step of the book recommender.
 There are in total 30 original turtle files in the dataset, which can be downloaded in https://lod.b3kat.de/doc/download/.  
 We shorten the name of the original files as "part0.ttl" to "part30.ttl".  
 
-## how many books per category?
+## data overview
+### how many books per category?
 There are two properties describe the cateagories of books, namely dc:subject and dct:subject.  
 Let's take "dct:subject" as an example.  
 First, grep all lines containing "dct;subject" save as "dctsubject".  
@@ -39,7 +40,7 @@ Further steps can be found in file "dctsubject+dcsubject.ipynb".
 The output "dctsubject.csv" contains two columns "dctsubject" and "number"(the number of book per dctsubject).  
 In the same way, we can get "dcsubject.csv".  
 
-## transfer the turtle files into n-triple
+### transfer the turtle files into n-triple
 Let's take "part1.ttl" for an example.  
 We find out that the file size is too large to transfer, so we seperate part1.ttl into two files "split1aa" and "split1ab".
 ```
@@ -69,7 +70,7 @@ rapper -i turtle split1-2 >out1-2
 ```
 Save all n-triple files into a folder "ntriples".
 
-## remove needless items
+### remove needless items
 There are 110,698,504 distinct items in the dataset. After overviewing the names of all items, we found out there is information about 5 kinds of items, which we should exclude from our dataset:  
 - isbn eg. <http://lod.b3kat.de/isbn/0002111225>  
 tells about the corresponding book to the isbn through owl:sameAs  
@@ -84,7 +85,7 @@ tells about the exemplar of a certain book
 tells about the volume of a certain book  
 Use "clean.sh" to remove all the needless items and save in "cleanout" folder.
 
-## how many types(rdf:type) of items are in the dataset?
+### how many types(rdf:type) of items are in the dataset?
 Grep all lines containing "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>"
 ```
 grep -Eh '<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>' cleanout/* > rdftype
@@ -99,7 +100,7 @@ cut -d ' ' -f3 rdftype |sort|uniq -c|sed 's/ \+/,/g' > rdftype.csv
 sed -i 's/^,//' rdftype.csv
 ```
 
-## how many authors are in the dataset?
+### how many authors are in the dataset?
 There are two properties which decreibe authors, namely dct:creator(<http://purl.org/dc/terms/creator>) and marcrel:aut(<http://id.loc.gov/vocabulary/relators/aut>).   
 Follow similar steps with "how many types(rdf:type) of items are in the dataset?"
 Let's take "dct:creator" as an example.  
@@ -107,8 +108,12 @@ Let's take "dct:creator" as an example.
 grep -Eh '<http://purl.org/dc/terms/creator>' cleanout/* > dctcreator
 sed -i 's/ .$//' dctcreator
 cut -d ' ' -f3 dctcreator |sort|uniq -c|sed 's/ \+/,/g' > dctcreator.csv
-sed -i 's/^,//' dctcreator0.csv
+sed -i 's/^,//' dctcreator_count.csv
 ```
-Further steps can be found in file "dctcerator+marcrelaut.ipynb".  
+Further steps can be found in file "dctcerator+marcrelaut.ipynb". 
+Input: dctcreator_count.csv
 The output "dctsubject.csv" contains two columns "dctcreator" and "number"(the number of books per creator).  
 In the same way, we can get "marcrelaut.csv".  
+
+### what properties are used? the number of items per property and the coverage of the properties
+
