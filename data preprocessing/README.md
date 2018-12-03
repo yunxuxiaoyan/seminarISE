@@ -37,7 +37,7 @@ Delete the leading comma.
 sed -i 's/^,//' dctsubject_count.csv
 ```
 Further steps can be found in file "dctsubject+dcsubject.ipynb".
-Input dctsubject_count.csv.
+Input dctsubject_count.csv.  
 The output "dctsubject.csv" contains two columns "dctsubject" and "number"(the number of book per dctsubject).  
 In the same way, we can get "dcsubject.csv".  
 
@@ -47,7 +47,7 @@ We find out that the file size is too large to transfer, so we seperate part1.tt
 ```
 split -l 30000000 part1.ttl split/split1 
 ```
-Since the spliting is based on number of lines, the facts of an item can occur in the end of "splitaa" and the start "splitab". It requires some manual steps to modify the two split files to make sure the second file starts with a new item and the first ends with the complete facts of a item.  
+Since the spliting is based on number of lines, the facts of an item can occur in the end of "splitaa" and the start "splitab". It requires some manual steps to modify the two split files to make sure that the second file starts with a new item and the first ends with the complete facts of a item.  
 Check ?x leading lines of "splitab".  
 ```
 head -?x splitab
@@ -83,7 +83,8 @@ tells about which books have the certain subject through “is dcterms:subject o
 - #item eg. <http://lod.b3kat.de/title/BV000180845#item-DE-188>  
 tells about the exemplar of a certain book  
 - #vol eg. <http://lod.b3kat.de/title/BV000203120#vol-12>  
-tells about the volume of a certain book  
+tells about the volume of a certain book   
+
 Use "clean.sh" to remove all the needless items and save in "cleanout" folder.  
 After removing these kind of information, we got a dataset with 31,029,224 distinct items.
 
@@ -112,8 +113,8 @@ sed -i 's/ .$//' dctcreator
 cut -d ' ' -f3 dctcreator |sort|uniq -c|sed 's/ \+/,/g' > dctcreator.csv
 sed -i 's/^,//' dctcreator_count.csv
 ```
-Further steps can be found in file "dctcerator+marcrelaut.ipynb". 
-Input: dctcreator_count.csv
+Further steps can be found in file "dctcerator+marcrelaut.ipynb".   
+Input: "dctcreator_count.csv"  
 The output "dctsubject.csv" contains two columns "dctcreator" and "number"(the number of books per creator).  
 In the same way, we can get "marcrelaut.csv".  
 
@@ -131,8 +132,8 @@ Save as "property_count.csv"
 cut -d ' ' -f2 item_property|sort|uniq -c|sed 's/ \+/,/g' > property_count.csv
 sed -i 's/^,//' property_count.csv
 ```
-Further steps can be found in file "property.ipynb". 
-Input: "property_count.csv"
+Further steps can be found in file "property.ipynb".    
+Input: "property_count.csv"   
 The output "property_coverage.csv" contains three columns "property", "number"(the number of items per property) and "coverage".  
  
  ### 1.7 how many distinct authors per subject?
@@ -183,8 +184,8 @@ empty folder"grepdctsubject"
 "grepdctsubject" folder   
 
 ### 2.2 remove items whose authors(marcrel:aut) don't exist in Wikidata
-We found out the uri of author is identifier from Deutsche Nationalbibliothek(gnd identifier).
-In order to de federated query using wikidata, we need to make sure all the authors of items in our dataset also exists in Wikidata.  
+We found out the uri of author is identifier from Deutsche Nationalbibliothek(gnd identifier).  
+In order to do federated query using wikidata, we need to make sure all the authors of items in our dataset also exists in Wikidata.  
 First query all items in Wikidata with a gnd identifier in Wikidata SPARQL Endpoint(https://query.wikidata.org).
 Download the result as a csv file "gndquery.csv"
 ```
@@ -194,9 +195,9 @@ SELECT * WHERE {
 }
 ```
 Further steps can be found in "autwikiitem.ipynb"  
-input: "gndquery.csv", "item_marcrelaut.csv"
+input: "gndquery.csv", "item_marcrelaut.csv"   
 output: "autwikiitem.csv" (the uri of all the items whose authors exist in Wikidata)  
-Next, extract information of items in "autwikiitem.csv"
+Next, extract information of items in "autwikiitem.csv"  
 Use "autwikiitem.sh"  
 - input: 
 (in the same path with "autwikiitem.sh")   
