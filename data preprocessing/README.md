@@ -186,7 +186,7 @@ output:
 "cre_per_dc.csv"  
 "aut_per_dc.csv"  
 
-## 2 reduce the dataset
+## 2. reduce the dataset
 ### 2.1 remove items without "dct:subject"
 Use "dctsubjectitem.sh"  
 - input:  
