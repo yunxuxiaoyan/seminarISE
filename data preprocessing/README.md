@@ -36,7 +36,8 @@ Delete the leading comma.
 ```
 sed -i 's/^,//' dctsubject_count.csv
 ```
-Further steps can be found in file "dctsubject+dcsubject.ipynb".  
+Further steps can be found in file "dctsubject+dcsubject.ipynb".
+Input dctsubject_count.csv.
 The output "dctsubject.csv" contains two columns "dctsubject" and "number"(the number of book per dctsubject).  
 In the same way, we can get "dcsubject.csv".  
 
@@ -83,7 +84,8 @@ tells about which books have the certain subject through “is dcterms:subject o
 tells about the exemplar of a certain book  
 - #vol eg. <http://lod.b3kat.de/title/BV000203120#vol-12>  
 tells about the volume of a certain book  
-Use "clean.sh" to remove all the needless items and save in "cleanout" folder.
+Use "clean.sh" to remove all the needless items and save in "cleanout" folder.  
+After removing these kind of information, we got a dataset with 31,029,224 distinct items.
 
 ### how many types(rdf:type) of items are in the dataset?
 Grep all lines containing "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>"
@@ -116,4 +118,21 @@ The output "dctsubject.csv" contains two columns "dctcreator" and "number"(the n
 In the same way, we can get "marcrelaut.csv".  
 
 ### what properties are used? the number of items per property and the coverage of the properties
+Cut subject and property part of all the triples.
+Sort and delete duplicate item_property group.
+Save as "item_property"
+```
+```
+Cut property part of every unique item_property group.
+Sort and count unique.
+Save as "property_count.csv"
+```
+cut -d ' ' -f2 item_property|sort|uniq -c|sed 's/ \+/,/g' > property_count.csv
+sed -i 's/^,//' property_count.csv
+```
+Further steps can be found in file "property.ipynb". 
+Input: "property_count.csv"
+The output "property_coverage.csv" contains three columns "property", "number"(the number of items per property) and "coverage".  
+ 
+ ### how many distinct authors per subject?
 
