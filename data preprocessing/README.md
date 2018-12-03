@@ -83,25 +83,32 @@ tells about the exemplar of a certain book
 - #vol eg. <http://lod.b3kat.de/title/BV000203120#vol-12>  
 tells about the volume of a certain book  
 Use "clean.sh" to remove all the needless items and save in "cleanout" folder.
-```
-grep -Eh -v '^<http://lod.b3kat.de/issn/|^<http://lod.b3kat.de/isbn/|^<http://lod.b3kat.de/ssg|#item|#vol' out0-1 > cleanout0-1
-```
+
 ## how many types(rdf:type) of items are in the dataset?
+Grep all lines containing "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>"
 ```
-grep -Eh '<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>' cleanout/*|sort|uniq -c > rdftype.csv
+grep -Eh '<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>' cleanout/* > rdftype
 ```
 Delete the punctuation and white spaces and the end of each line.   
 Remove the subject and property in the triple.  
 Sort and count unique types.
 Save as a csv file.
 ```
-sed -i 's/ $//' rdftype
-cut -d ' ' -f3 rdftype |sort|uniq -c|sed 's/  \+/,/g' > dctsubject_count.csv > rdftype.csv
+sed -i 's/ .$//' rdftype
+cut -d ' ' -f3 rdftype |sort|uniq -c|sed 's/ \+/,/g' > rdftype.csv
 sed -i 's/^,//' rdftype.csv
 ```
 
 ## how many authors are in the dataset?
-There are two properties which decreibe authors, namely dct:creator and marcrel:aut.   
-Follow similar steps with "how many books per category?"
-
-
+There are two properties which decreibe authors, namely dct:creator(<http://purl.org/dc/terms/creator>) and marcrel:aut(<http://id.loc.gov/vocabulary/relators/aut>).   
+Follow similar steps with "how many types(rdf:type) of items are in the dataset?"
+Let's take "dct:creator" as an example.  
+```
+grep -Eh '<http://purl.org/dc/terms/creator>' cleanout/* > dctcreator
+sed -i 's/ .$//' dctcreator
+cut -d ' ' -f3 dctcreator |sort|uniq -c|sed 's/ \+/,/g' > dctcreator.csv
+sed -i 's/^,//' dctcreator0.csv
+```
+Further steps can be found in file "dctcerator+marcrelaut.ipynb".  
+The output "dctsubject.csv" contains two columns "dctcreator" and "number"(the number of books per creator).  
+In the same way, we can get "marcrelaut.csv".  
