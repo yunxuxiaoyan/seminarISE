@@ -3,8 +3,8 @@ This file presents detail data preprocessing step of the book recommender.
 There are in total 30 original turtle files in the dataset, which can be downloaded in https://lod.b3kat.de/doc/download/.  
 We shorten the name of the original files as "part0.ttl" to "part30.ttl".  
 
-## data overview
-### how many books per category?
+## 1. data overview
+### 1.1 how many books per category?
 There are two properties describe the cateagories of books, namely dc:subject and dct:subject.  
 Let's take "dct:subject" as an example.  
 First, grep all lines containing "dct;subject" save as "dctsubject".  
@@ -41,7 +41,7 @@ Input dctsubject_count.csv.
 The output "dctsubject.csv" contains two columns "dctsubject" and "number"(the number of book per dctsubject).  
 In the same way, we can get "dcsubject.csv".  
 
-### transfer the turtle files into n-triple
+### 1.2 transfer the turtle files into n-triple
 Let's take "part1.ttl" for an example.  
 We find out that the file size is too large to transfer, so we seperate part1.ttl into two files "split1aa" and "split1ab".
 ```
@@ -71,7 +71,7 @@ rapper -i turtle split1-2 >out1-2
 ```
 Save all n-triple files into a folder "ntriples".
 
-### remove needless items
+### 1.3 remove needless items
 There are 110,698,504 distinct items in the dataset. After overviewing the names of all items, we found out there is information about 5 kinds of items, which we should exclude from our dataset:  
 - isbn eg. <http://lod.b3kat.de/isbn/0002111225>  
 tells about the corresponding book to the isbn through owl:sameAs  
@@ -87,7 +87,7 @@ tells about the volume of a certain book
 Use "clean.sh" to remove all the needless items and save in "cleanout" folder.  
 After removing these kind of information, we got a dataset with 31,029,224 distinct items.
 
-### how many types(rdf:type) of items are in the dataset?
+### 1.4 how many types(rdf:type) of items are in the dataset?
 Grep all lines containing "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>"
 ```
 grep -Eh '<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>' cleanout/* > rdftype
@@ -102,7 +102,7 @@ cut -d ' ' -f3 rdftype |sort|uniq -c|sed 's/ \+/,/g' > rdftype.csv
 sed -i 's/^,//' rdftype.csv
 ```
 
-### how many authors are in the dataset?
+### 1.5 how many authors are in the dataset?
 There are two properties which decreibe authors, namely dct:creator(<http://purl.org/dc/terms/creator>) and marcrel:aut(<http://id.loc.gov/vocabulary/relators/aut>).   
 Follow similar steps with "how many types(rdf:type) of items are in the dataset?"
 Let's take "dct:creator" as an example.  
@@ -117,7 +117,7 @@ Input: dctcreator_count.csv
 The output "dctsubject.csv" contains two columns "dctcreator" and "number"(the number of books per creator).  
 In the same way, we can get "marcrelaut.csv".  
 
-### what properties are used? the number of items per property and the coverage of the properties
+### 1.6 what properties are used? the number of items per property and the coverage of the properties
 Cut subject and property part of all the triples.
 Sort and delete duplicate item_property group.
 Save as "item_property"
@@ -135,7 +135,7 @@ Further steps can be found in file "property.ipynb".
 Input: "property_count.csv"
 The output "property_coverage.csv" contains three columns "property", "number"(the number of items per property) and "coverage".  
  
- ### how many distinct authors per subject?
+ ### 1.7 how many distinct authors per subject?
 Two properties describe subjects of books, namely dct:subject(<http://purl.org/dc/terms/subject>) and dc:subject(<http://purl.org/dc/elements/1.1/subject>).  
 Two properties which decreibe authors, namely dct:creator(<http://purl.org/dc/terms/creator>) and marcrel:aut(<http://id.loc.gov/vocabulary/relators/aut>).  
 First we need to grep tables of items and dctsubject/dcsubject/dctcreator/marcrelaut.  
@@ -164,12 +164,52 @@ split -l 20000000 item_dcsubject.csv item_dcsubject
 ```
 Further steps can be found in:    
 - "number of dctcreator and marcrelaut per dctsubject.ipynb"  
-input: "item_dctsubjectaa.csv", "item_dctsubjectab.csv", "item_dctsubjectac.csv", "item_dctcreator.csv" ,"item_marcreal.csv"
+input: "item_dctsubjectaa.csv", "item_dctsubjectab.csv", "item_dctsubjectac.csv", "item_dctcreator.csv" ,"item_marcrealaut.csv"  
 output: "cre_per_dct.csv", "aut_per_dct.csv"  
 (eg. "cre_per_dct.csv" contains two columns: "dctsubject","number of dctcreator per dctsubject")  
 - "number of dctcreator and marcrelaut per dcsubject.ipynb"  
-input: "item_dcsubjectaa", "item_dcsubjectab", "item_dcsubjectac", "item_dctcreator.csv" , "item_marcreal.csv"    
+input: "item_dcsubjectaa", "item_dcsubjectab", "item_dcsubjectac", "item_dctcreator.csv" , "item_marcrealaut.csv"    
 output: "cre_per_dc.csv", "aut_per_dc.csv"  
 
-## reduce the dataset
+## 2 reduce the dataset
+### 2.1 remove items without "dct:subject"
+Use "dctsubjectitem.sh"  
+- input:  
+(in the same path with "dctsubjectitem.sh")    
+"cleanout" folder   
+empty folder "dctsubjectitems"    
+empty folder"grepdctsubject"  
+- output:  
+"grepdctsubject" folder   
+
+### 2.2 remove items whose authors(marcrel:aut) don't exist in Wikidata
+We found out the uri of author is identifier from Deutsche Nationalbibliothek(gnd identifier).
+In order to de federated query using wikidata, we need to make sure all the authors of items in our dataset also exists in Wikidata.  
+First query all items in Wikidata with a gnd identifier in Wikidata SPARQL Endpoint(https://query.wikidata.org).
+Download the result as a csv file "gndquery.csv"
+```
+SELECT * WHERE {
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+  OPTIONAL { ?item wdt:P227 ?GND__. }
+}
+```
+Further steps can be found in "autwikiitem.ipynb"  
+input: "gndquery.csv", "item_marcrelaut.csv"
+output: "autwikiitem.csv" (the uri of all the items whose authors exist in Wikidata)  
+Next, extract information of items in "autwikiitem.csv"
+Use "autwikiitem.sh"  
+- input: 
+(in the same path with "autwikiitem.sh")   
+"autwikiitwm.csv"   
+"cleanout" folder   
+empty folder "autitem"   
+empty folder"autwikiitem"    
+empty folder "grepaut_grepdctsubject"   
+- output:   
+"grepaut_grepdctsubject" folder  
+
+Cat the "grepaut_grepdctsubject" folder
+```
+
+```
 
