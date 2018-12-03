@@ -5,13 +5,39 @@ We shorten the name of the original files as "part0.ttl" to "part30.ttl".
 
 ## how many books per category?
 There are two properties describe the cateagories of books, namely dc:subject and dct:subject.
-First, grep all lines containing"dc:subject"/"dct;subject" save as "dc:subject" and "dctsubject"
+Let's take "dct:subject" as an example.
+First, grep all lines containing "dct;subject" save as "dctsubject".
 ```
-grep -Eh 'dc:subject' * >dcsubject
+grep -Eh 'dct:subject' * > dctsubject
+```
+The "dctsubject" fille is like:
+```
+        dct:subject               <http://lod.b3kat.de/ssg/9.2> ;
+        dct:subject               <http://lod.b3kat.de/ssg/6.12> ;
+        dct:subject               <http://rvk.uni-regensburg.de/api/xml/node/BS%204780> .
+```
+Next, delete all punctuations and white space in the end of each line.
+```
+sed -i 's/;$//' dctsubject
 ```
 ```
-grep -Eh 'dct:subject' * >dctsubject
+sed -i 's/.$//' dctsubject
 ```
+```
+sed -i 's/ $//' dctsubject
+```
+Then sort the dctsubject0 file and count the occurance of each unique line.
+Transfer into a csv file.
+```
+sort dctsubject|uniq -c|sed 's/  \+/,/g' > dctsubject_count.csv
+```
+Delete the leading comma.
+```
+sed -i 's/^,//' dctsubject_count.csv
+```
+Further steps can be found in file dctsubject.ipynb.
+The output "dctsubject.csv" contains two columns "dctsubject" and "number"(the number of book per dctsubject).
+In the same way, we can get "dcsubject.csv".
 
 ## transfer the turtle files into n-triple
 Let's take "part1.ttl" for an example.
