@@ -137,35 +137,39 @@ The output "property_coverage.csv" contains three columns "property", "number"(t
  
  ### how many distinct authors per subject?
 Two properties describe subjects of books, namely dct:subject(<http://purl.org/dc/terms/subject>) and dc:subject(<http://purl.org/dc/elements/1.1/subject>).  
-Two properties which decreibe authors, namely dct:creator(<http://purl.org/dc/terms/creator>) and marcrel:aut(<http://id.loc.gov/vocabulary/relators/aut>).
-First we need to grep tables of items and dctsubject/dcsubject/dctcreator/marcrelaut.
-Let's take "dct:subject" as an example. 
-Grep all lines with dct:subject(<http://purl.org/dc/terms/subject>).
+Two properties which decreibe authors, namely dct:creator(<http://purl.org/dc/terms/creator>) and marcrel:aut(<http://id.loc.gov/vocabulary/relators/aut>).  
+First we need to grep tables of items and dctsubject/dcsubject/dctcreator/marcrelaut.  
+Let's take "dct:subject" as an example.   
+Grep all lines with dct:subject(<http://purl.org/dc/terms/subject>).  
 ```
 grep -Eh '<http://purl.org/dc/terms/subject>' cleanout/* >dctsubject_triple
 ```
-Replace "<http://purl.org/dc/terms/subject>" with ",,,".
-Save the output as "item_dctsubject.csv" with delimiter ",,,".
+Replace "<http://purl.org/dc/terms/subject>" with ",,,".  
+Save the output as "item_dctsubject.csv" with delimiter ",,,".  
 ```
 grep -Eh '<http://purl.org/dc/terms/subject>' cleanout/*  >dctsubject_triple
 replacement="<http://purl.org/dc/terms/subject>"
 sed -e "s@$replacement@,,,@" dctsubject_triple >item_dctsubject.csv
 sed -i 's/ .$//' item_dctsubject.csv
 ```
-Follow the same method we can ge "item_dcsubject.csv", "item_dctcreator.csv" ,"item_marcreal.csv".  
+Follow the same method we can ge "item_dcsubject.csv", "item_dctcreator.csv" ,"item_marcreal.csv".    
 We found out "item_dctsubject.csv" and "item_dcsubject.csv" are too large to read as a dataframe in Python. So we split each of them into 3 files, namely   
-"item_dctsubjectaa","item_dctsubjectaa","item_dctsubjectaa",  
-"item_dcsubjectaa","item_dcsubjectaa","item_dcsubjectaa".  
+"item_dctsubjectaa","item_dctsubjectaa","item_dctsubjectaa",    
+"item_dcsubjectaa","item_dcsubjectaa","item_dcsubjectaa".    
 ```
 split -l 20000000 item_dctsubject.csv item_dctsubject
 ```
 ```
 split -l 20000000 item_dcsubject.csv item_dcsubject
 ```
-Further steps can be found in:  
-- "number of dctcreator and marcrelaut per dctsubject.ipynb"
+Further steps can be found in:    
+- "number of dctcreator and marcrelaut per dctsubject.ipynb"  
 input: "item_dctsubjectaa.csv", "item_dctsubjectab.csv", "item_dctsubjectac.csv", "item_dctcreator.csv" ,"item_marcreal.csv"
-output: "cre_per_dct.csv", "aut_per_dct.csv"
-- "number of dctcreator and marcrelaut per dcsubject.ipynb"
-input: "item_dcsubjectaa", "item_dcsubjectab", "item_dcsubjectac", "item_dctcreator.csv" , "item_marcreal.csv"  
-output: "cre_per_dc.csv", "aut_per_dc.csv"
+output: "cre_per_dct.csv", "aut_per_dct.csv"  
+(eg. "cre_per_dct.csv" contains two columns: "dctsubject","number of dctcreator per dctsubject")  
+- "number of dctcreator and marcrelaut per dcsubject.ipynb"  
+input: "item_dcsubjectaa", "item_dcsubjectab", "item_dcsubjectac", "item_dctcreator.csv" , "item_marcreal.csv"    
+output: "cre_per_dc.csv", "aut_per_dc.csv"  
+
+## reduce the dataset
+
