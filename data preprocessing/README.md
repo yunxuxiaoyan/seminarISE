@@ -1,5 +1,5 @@
 # data pre-processing
-This file presents detail data preprocessing step of the book recommender.  
+This file presents detail data preprocessing steps of the project.  
 There are in total 30 original turtle files in the dataset, which can be downloaded in https://lod.b3kat.de/doc/download/.  
 We shorten the name of the original files as "part0.ttl" to "part30.ttl".  
 
@@ -7,7 +7,7 @@ We shorten the name of the original files as "part0.ttl" to "part30.ttl".
 ### 1.1 how many books per category?
 There are two properties describe the cateagories of books, namely dc:subject and dct:subject.  
 Let's take "dct:subject" as an example.  
-First, grep all lines containing "dct;subject" save as "dctsubject".  
+First, grep all lines containing "dct:subject" save as "dctsubject".  
 ```
 grep -Eh 'dct:subject' * > dctsubject
 ```
@@ -36,7 +36,7 @@ Delete the leading comma.
 ```
 sed -i 's/^,//' dctsubject_count.csv
 ```
-Further steps can be found in file "dctsubject+dcsubject.ipynb".
+Further steps can be found in file "dctsubject+dcsubject.ipynb".  
 Input dctsubject_count.csv.  
 The output "dctsubject.csv" contains two columns "dctsubject" and "number"(the number of book per dctsubject).  
 In the same way, we can get "dcsubject.csv".  
@@ -105,7 +105,7 @@ sed -i 's/^,//' rdftype.csv
 
 ### 1.5 how many authors are in the dataset?
 There are two properties which decreibe authors, namely dct:creator(<http://purl.org/dc/terms/creator>) and marcrel:aut(<http://id.loc.gov/vocabulary/relators/aut>).   
-Follow similar steps with "how many types(rdf:type) of items are in the dataset?"
+Follow similar steps with "how many types(rdf:type) of items are in the dataset?"   
 Let's take "dct:creator" as an example.  
 ```
 grep -Eh '<http://purl.org/dc/terms/creator>' cleanout/* > dctcreator
@@ -119,8 +119,8 @@ The output "dctsubject.csv" contains two columns "dctcreator" and "number"(the n
 In the same way, we can get "marcrelaut.csv".  
 
 ### 1.6 what properties are used? the number of items per property and the coverage of the properties
-Cut subject and property part of all the triples.
-Sort and delete duplicate item_property group.
+Cut subject and property part of all the triples.  
+Sort and delete duplicate item_property group.  
 Save as "item_property"
 ```
 cut -d ' ' -f 1-2 cleanout/* |sort|uniq > item_property
@@ -134,7 +134,7 @@ sed -i 's/^,//' property_count.csv
 ```
 Further steps can be found in file "property.ipynb".    
 Input: "property_count.csv"   
-The output "property_coverage.csv" contains three columns "property", "number"(the number of items per property) and "coverage".  
+Output: "property_coverage.csv" (contains three columns "property", "number"(the number of items per property) and "coverage")  
  
  ### 1.7 how many distinct authors per subject?
 Two properties describe subjects of books, namely dct:subject(<http://purl.org/dc/terms/subject>) and dc:subject(<http://purl.org/dc/elements/1.1/subject>).  
@@ -165,12 +165,26 @@ split -l 20000000 item_dcsubject.csv item_dcsubject
 ```
 Further steps can be found in:    
 - "number of dctcreator and marcrelaut per dctsubject.ipynb"  
-input: "item_dctsubjectaa.csv", "item_dctsubjectab.csv", "item_dctsubjectac.csv", "item_dctcreator.csv" ,"item_marcrealaut.csv"  
-output: "cre_per_dct.csv", "aut_per_dct.csv"  
+input:   
+"item_dctsubjectaa.csv"  
+"item_dctsubjectab.csv"  
+"item_dctsubjectac.csv"   
+"item_dctcreator.csv"  
+"item_marcrealaut.csv"  
+output:   
+"cre_per_dct.csv"  
+"aut_per_dct.csv"  
 (eg. "cre_per_dct.csv" contains two columns: "dctsubject","number of dctcreator per dctsubject")  
 - "number of dctcreator and marcrelaut per dcsubject.ipynb"  
-input: "item_dcsubjectaa", "item_dcsubjectab", "item_dcsubjectac", "item_dctcreator.csv" , "item_marcrealaut.csv"    
-output: "cre_per_dc.csv", "aut_per_dc.csv"  
+input:   
+"item_dcsubjectaa"   
+"item_dcsubjectab"  
+"item_dcsubjectac"  
+"item_dctcreator.csv"   
+"item_marcrealaut.csv"    
+output:   
+"cre_per_dc.csv"  
+"aut_per_dc.csv"  
 
 ## 2 reduce the dataset
 ### 2.1 remove items without "dct:subject"
@@ -197,8 +211,7 @@ SELECT * WHERE {
 Further steps can be found in "autwikiitem.ipynb"  
 input: "gndquery.csv", "item_marcrelaut.csv"   
 output: "autwikiitem.csv" (the uri of all the items whose authors exist in Wikidata)  
-Next, extract information of items in "autwikiitem.csv"  
-Use "autwikiitem.sh"  
+Next, extract information of items in "autwikiitem.csv" using "autwikiitem.sh"  
 - input: 
 (in the same path with "autwikiitem.sh")   
 "autwikiitwm.csv"   
