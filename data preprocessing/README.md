@@ -197,7 +197,7 @@ empty folder"grepdctsubject"
 - output:  
 "grepdctsubject" folder   
 
-### 2.2 remove items whose authors(marcrel:aut and dct:creator) don't exist in Wikidata
+### 2.2 remove items whose authors(dct:creator and marcrel:aut) don't exist in Wikidata
 We found out the uri of author is identifier from Deutsche Nationalbibliothek(gnd identifier). The gnd identifier is also used in Wikidata through property "wdt:P227".     
 In order to do federated query using wikidata, we need to make sure all the authors of items in our dataset also exists in Wikidata.  
 First we need to grep items with marcrel:aut and dct:creator from "grepdctsubject" folder.   
@@ -216,7 +216,8 @@ replacement="<http://id.loc.gov/vocabulary/relators/aut>"
 sed -e "s@$replacement@,,,@" aut_grepdctsubject_triple >item_aut_grepdctsubject.csv
 sed -i 's/ .$//' item_aut_grepdctsubject.csv
 ```
-Follow the same method we can ge "item_cre_grepdctsubject.csv"/"item_aut_grepdctsubject.csv".
+Follow the same method we can ge "item_cre_grepdctsubject.csv"/"item_aut_grepdctsubject.csv".  
+
 Then, query all items in Wikidata with a gnd identifier in Wikidata SPARQL Endpoint(https://query.wikidata.org).
 Download the result as a csv file "gndquery.csv"
 ```
@@ -225,16 +226,16 @@ SELECT * WHERE {
   OPTIONAL { ?item wdt:P227 ?GND__. }
 }
 ```
-Further steps can be found in "autwikiitem.ipynb"  
-input: "gndquery.csv", "item_marcrelaut.csv"   
-output: "autwikiitem.csv" (the uri of all the items whose authors exist in Wikidata)  
-Next, extract information of items in "autwikiitem.csv" using "autwikiitem.sh"  
+Further steps can be found in "authorwikiitem.ipynb"  
+input: "gndquery.csv", "item_cre_grepdctsubject.csv", "item_aut_grepdctsubject.csv".   
+output: "authorwikiitem.csv" (the uri of all the items whose authors exist in Wikidata)  
+Next, extract information of items in "authorwikiitem.csv" using "authorwikiitem.sh"  
 - input: 
-(in the same path with "autwikiitem.sh")   
-"autwikiitwm.csv"   
-"cleanout" folder   
-empty folder "autitem"   
-empty folder"autwikiitem"    
+(in the same path with "authorwikiitem.sh")   
+"authorwikiitwm.csv"   
+"grepdctsubject" folder   
+empty folder "authoritem"   
+empty folder"authorwikiitem"    
 empty folder "grepaut_grepdctsubject"   
 - output:   
 "grepaut_grepdctsubject" folder  
