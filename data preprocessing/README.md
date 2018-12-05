@@ -242,6 +242,6 @@ empty folder "grepaut_grepdctsubject"
 
 Cat the "grepaut_grepdctsubject" folder as one file
 ```
-cat prefix grepaut_grepdctsubject/* > grepaut_grepdctsubject_cleanout
+cat grepaut_grepdctsubject/* > grepaut_grepdctsubject_cleanout
 ```
 The new dataset is "grepaut_grepdctsubject_cleanout".
