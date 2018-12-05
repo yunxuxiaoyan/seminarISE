@@ -205,8 +205,8 @@ Grep all lines with dct:creator/marcrel:aut.
 Replace "<http://purl.org/dc/terms/creator>"/"<http://id.loc.gov/vocabulary/relators/aut>" with ",,,".  
 Save the output as "item_cre_grepdctsubject.csv"/"item_aut_grepdctsubject.csv" with delimiter ",,,".  
 ```
-grep -Eh '<http://purl.org/dc/terms/subject>' grepdctsubject/*  >cre_grepdctsubject_triple
-replacement="<http://purl.org/dc/terms/subject>"
+grep -Eh '<http://purl.org/dc/terms/creator>' grepdctsubject/*  >cre_grepdctsubject_triple
+replacement="<http://purl.org/dc/terms/creator>"
 sed -e "s@$replacement@,,,@" cre_grepdctsubject_triple >item_cre_grepdctsubject.csv
 sed -i 's/ .$//' item_cre_grepdctsubject.csv
 ```
