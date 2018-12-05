@@ -197,10 +197,27 @@ empty folder"grepdctsubject"
 - output:  
 "grepdctsubject" folder   
 
-### 2.2 remove items whose authors(marcrel:aut) don't exist in Wikidata
-We found out the uri of author is identifier from Deutsche Nationalbibliothek(gnd identifier).  
+### 2.2 remove items whose authors(marcrel:aut and dct:creator) don't exist in Wikidata
+We found out the uri of author is identifier from Deutsche Nationalbibliothek(gnd identifier). The gnd identifier is also used in Wikidata through property "wdt:P227".     
 In order to do federated query using wikidata, we need to make sure all the authors of items in our dataset also exists in Wikidata.  
-First query all items in Wikidata with a gnd identifier in Wikidata SPARQL Endpoint(https://query.wikidata.org).
+First we need to grep items with marcrel:aut and dct:creator from "grepdctsubject" folder.   
+Grep all lines with dct:creator/marcrel:aut.  
+Replace "<http://purl.org/dc/terms/creator>"/"<http://id.loc.gov/vocabulary/relators/aut>" with ",,,".  
+Save the output as "item_cre_grepdctsubject.csv"/"item_aut_grepdctsubject.csv" with delimiter ",,,".  
+```
+grep -Eh '<http://purl.org/dc/terms/subject>' cleanout/*  >cre_grepdctsubject_triple
+replacement="<http://purl.org/dc/terms/subject>"
+sed -e "s@$replacement@,,,@" cre_grepdctsubject_triple >item_cre_grepdctsubject.csv
+sed -i 's/ .$//' item_cre_grepdctsubject.csv
+```
+```
+grep -Eh '<http://id.loc.gov/vocabulary/relators/aut>' cleanout/*  >aut_grepdctsubject_triple
+replacement="<http://id.loc.gov/vocabulary/relators/aut>"
+sed -e "s@$replacement@,,,@" aut_grepdctsubject_triple >item_aut_grepdctsubject.csv
+sed -i 's/ .$//' item_aut_grepdctsubject.csv
+```
+Follow the same method we can ge "item_cre_grepdctsubject.csv"/"item_aut_grepdctsubject.csv".
+Then, query all items in Wikidata with a gnd identifier in Wikidata SPARQL Endpoint(https://query.wikidata.org).
 Download the result as a csv file "gndquery.csv"
 ```
 SELECT * WHERE {
