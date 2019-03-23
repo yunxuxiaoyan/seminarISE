@@ -33,12 +33,12 @@ The results are saved in file distinct_pro_btw_items.csv.
 
 # algorithmen with bash command line
 >there are three scripts:
->> script get_information.sh describes how to find candidate items, get information about target,candidate items and item authors from dataset
+>> firstly, script get_information.sh describes how to find candidate items, get information about target,candidate items and item authors from dataset
 >>> input: file itemuri.txt, which contains uri of 1000 target items
 >>> output: folder itemcandidate, iteminfo,itemwiki,itemautinfo,itemautprop,caninfo,canwiki,canautinfo,danautuniq 
 
->> script get_relationship.sh describes how to get four kinds of relationships from blazegraph and some further processing of them
+>> secondly, script get_relationship.sh describes how to get four kinds of relationships from blazegraph and some further processing of them
 >>>output: folder relation
 
->> script get_results.sh describes how to compute the affinity score and get the final recommendation results 
+>> thirdly, script get_results.sh describes how to compute the affinity score and get the final recommendation results 
 >>>output: folder replace, result, sheet,temp
