@@ -36,53 +36,49 @@ The results are saved in file distinct_pro_btw_items.csv.
 >there are three scripts:
 >> firstly, script get_information.sh describes how to find candidate items, get information about target,candidate items and item authors from dataset
 >>> input: file itemuri.txt, which contains uri of 1000 target items
->>> output: folder itemcandidate, iteminfo,itemwiki,itemautinfo,itemautprop,caninfo,canwiki,canautinfo,danautuniq 
+>>> output: folder target and candidate
 
 >> secondly, script get_relationship.sh describes how to get four kinds of relationships from blazegraph and some further processing of them
 >>>output: folder relation
 
 >> thirdly, script get_results.sh describes how to compute the affinity score and get the final recommendation results 
->>>output: folder replace, result, sheet,temp
+>>>output: folder replace, result
 
-    |-- .bowerrc
-    |-- .jshintrc
-    |-- .jshintrc2
-    |-- Gruntfile.js
-    |-- README.md
-    |-- bower.json
-    |-- karma.conf.js
-    |-- package.json
-    |-- app
-        |-- app.js
-        |-- db.js
-        |-- directoryList.md
-        |-- index.html
-        |-- mddir.js
-        |-- routing.js
-        |-- server.js
-        |-- _api
-            |-- api.groups.js
-            |-- api.posts.js
-            |-- api.users.js
-            |-- api.widgets.js
-        |-- _components
-            |-- directives
-                |-- directives.module.js
-                |-- vendor
-                    |-- directive.draganddrop.js
-            |-- helpers
-                |-- helpers.module.js
-                |-- proprietary
-                    |-- factory.actionDispatcher.js
-            |-- services
-                |-- services.cardTemplates.js
-                |-- services.cards.js
-                |-- services.groups.js
-                |-- services.posts.js
-                |-- services.users.js
-                |-- services.widgets.js
-        |-- _mocks
-            |-- mocks.groups.js
-            |-- mocks.posts.js
-            |-- mocks.users.js
-            |-- mocks.widgets.js
+|--ISEdata
+    |-- authorwiki.nt
+    |-- data1208.nt
+    |-- itemuri.txt
+    |-- target
+        |-- itemautinfo
+        |-- itemautprop
+        |-- itemcandidate
+        |-- iteminfo
+        |-- itemwiki
+    |-- candidate
+        |-- canautinfo
+        |-- canautuniq
+        |-- caninfo
+        |-- canwikiallline
+        |-- canwikionly
+        |-- canwikisort_c2
+        |-- canwikiwith
+    |-- relation   
+        |-- relation1
+        |-- relation2
+        |-- relation3
+        |-- relation4
+        |-- r1
+        |-- r2
+        |-- r3
+        |-- r4
+    |-- replace   
+        |-- replace1
+        |-- replace2
+        |-- replace3
+        |-- replace4
+        |-- replace1234
+    |-- result
+        |-- sum
+        |-- top400can
+        |-- top400result
+                    
