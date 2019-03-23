@@ -44,7 +44,7 @@ The results are saved in file distinct_pro_btw_items.csv.
 >> thirdly, script get_results.sh describes how to compute the affinity score and get the final recommendation results 
 >>>output: folder replace, result
 
-|--ISEdata
+
     |-- authorwiki.nt
     |-- data1208.nt
     |-- itemuri.txt
