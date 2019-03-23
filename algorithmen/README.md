@@ -30,6 +30,7 @@ result = data['p'].value_counts()
 The results are saved in file distinct_pro_btw_items.csv. 
 
 ## 3. upload author dataset in blazegraph
+`the upload process modified 15,630,350 triples.`
 
 # algorithmen with bash command line
 >there are three scripts:
