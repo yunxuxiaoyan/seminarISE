@@ -1,4 +1,5 @@
 #find candidate items 
+#input: file itemuri.txt output: folder itemcandidate (1000 files for 1000 target items)
 mkdir itemcandidate
 for i in $(cat itemuri); 
 do
@@ -19,6 +20,7 @@ sed -i '1d' $file
 done
 
 #get target item information
+#input:file itemuri.txt ourput:folder iteminfo (1000 files for 1000 target items)
 mkdir iteminfo
 for i in $(cat itemuri);do
 j=$(echo ${i:27:11})
