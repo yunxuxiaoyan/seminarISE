@@ -80,6 +80,27 @@ grep -f $file caninfo/$filename |cut -d " " -f 1-2 > relation/relation2/$filenam
 done
 
 #get r3
+for file in itemwiki/*;
+do    
+  filename=$(basename $file)
+  while read line;
+  do 
+    grep "$line" a1p1a2.txt > grepauthor/$filename;
+    while read autline;
+    do
+      canaut="$(cut -d' ' -f2 <<< $autline)"
+      if [ "$canaut" == "$line" ];then
+        echo $line $autline "same">> output/output_$filename
+      else
+        result="$(cat grepauthor/$filename | grep "$canaut"|cut -d " " -f2)"
+        if [[ ! -z "$result" ]];then
+            echo $line $autline $result >> output/output_$filename 
+        fi   
+      fi
+
+    done < canwikiwith/$filename
+  done < itemwiki/$filename
+done
 #r3 remove same
 mkdir relation/relation3
 for file in relation/r3/*;do
